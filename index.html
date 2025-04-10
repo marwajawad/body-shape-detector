@@ -5,17 +5,6 @@
   <title>AI Body Shape Detector</title>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.20.0"></script>
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
-<script type="text/javascript">
-  let model, webcam, labelContainer, maxPredictions;
-
-  async function loadModel() {
-    const URL = "https://raw.githubusercontent.com/marwajawad/body-shape-detector/main/model/";
-    model = await tmImage.load(URL + "model.json", URL + "weights.bin");
-    console.log("✅ Model loaded successfully");
-  }
-
-  window.onload = loadModel;
-</script>
 
   
   <style>
@@ -57,16 +46,27 @@
   <img id="uploadedImage" alt="Upload an image to detect shape"/>
   <p id="result"></p>
 
+  <script type="text/javascript">
+  let model, webcam, labelContainer, maxPredictions;
+
+  async function loadModel() {
+    const URL = "https://raw.githubusercontent.com/marwajawad/body-shape-detector/main/model/";
+    model = await tmImage.load(URL + "model.json", URL + "weights.bin");
+    console.log("✅ Model loaded successfully");
+  }
+
+  window.onload = loadModel;
+</script>
+
   <script>
-    let model;
     const labels = ["Hourglass", "Pear", "Apple", "Rectangle", "Inverted Triangle"]; // Update this if your model has different labels
 
-    async function loadModel() {
+  /*  async function loadModel() {
       model = await tf.loadLayersModel('https://raw.githubusercontent.com/marwajawad/body-shape-detector/main/model/model.json');
       console.log("Model Loaded!");
     }
 
-    loadModel();
+    loadModel();*/
 
     document.getElementById('imageUpload').addEventListener('change', function (e) {
       const reader = new FileReader();
