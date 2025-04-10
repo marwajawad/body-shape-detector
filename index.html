@@ -50,7 +50,7 @@
     const modelURL = "https://marwajawad.github.io/body-shape-detector/model/model.json";
   let model, webcam, labelContainer, maxPredictions;
 
-
+/*
   async function loadModel() {
     const URL = "https://raw.githubusercontent.com/marwajawad/body-shape-detector/main/model/";
      try {
@@ -62,17 +62,17 @@
   }
   }
 
-  window.onload = loadModel;
+  window.onload = loadModel;*/
 
     const labels = ["Hourglass", "Pear", "Apple", "Rectangle", "Inverted Triangle"]; // Update this if your model has different labels
 
-  /*  async function loadModel() {
+    async function loadModel() {
       model = await tf.loadLayersModel('https://raw.githubusercontent.com/marwajawad/body-shape-detector/main/model/model.json');
       console.log("Model Loaded!");
     }
 
     loadModel();
-*/
+
     document.getElementById('imageUpload').addEventListener('change', function (e) {
       const reader = new FileReader();
       reader.onload = function () {
