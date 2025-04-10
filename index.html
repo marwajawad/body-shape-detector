@@ -1,100 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>AI Body Shape Detector</title>
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.20.0"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
-<script type="text/javascript">
-  let model, webcam, labelContainer, maxPredictions;
-
-  async function loadModel() {
-    const URL = "https://raw.githubusercontent.com/marwajawad/body-shape-detector/main/model/";
-    model = await tmImage.load(URL + "model.json", URL + "weights.bin");
-    console.log("✅ Model loaded successfully");
-  }
-
-  window.onload = loadModel;
-</script>
-
-  
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      text-align: center;
-      background-color: #f9f9f9;
-      padding: 40px;
-    }
-    h1 {
-      color: #333;
-    }
-    input, button {
-      margin: 20px;
-      font-size: 16px;
-      padding: 10px 20px;
-    }
-    img {
-      max-width: 300px;
-      margin-top: 20px;
-      border-radius: 12px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.2);
-    }
-    #result {
-      font-size: 20px;
-      font-weight: bold;
-      color: #2e8b57;
-      margin-top: 20px;
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Body Shape Detector</title>
 </head>
 <body>
-  <h1>AI Body Shape Detector</h1>
+  <h1>🧍‍♀️ Body Shape Detector</h1>
+  <input type="file" accept="image/*" id="imageUpload"/>
+  <br/><br/>
+  <div id="predictionResult"></div>
 
-  <input type="file" accept="image/*" id="imageUpload">
-  <br>
-  <button onclick="runPrediction()">Detect Body Shape</button>
-  <br>
-  <img id="uploadedImage" alt="Upload an image to detect shape"/>
-  <p id="result"></p>
+  <!-- Teachable Machine Library -->
+  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
 
   <script>
-    let model;
-    const labels = ["Hourglass", "Pear", "Apple", "Rectangle", "Inverted Triangle"]; // Update this if your model has different labels
+    let model, prediction;
 
     async function loadModel() {
-      model = await tf.loadLayersModel('https://raw.githubusercontent.com/marwajawad/body-shape-detector/main/model/model.json');
-      console.log("Model Loaded!");
+      const URL = "https://raw.githubusercontent.com/marwajawad/body-shape-detector/main/model/";
+      model = await tmImage.load(URL + "model.json", URL + "weights.bin");
+      console.log("✅ Model loaded successfully");
     }
 
-    loadModel();
+    async function predictImage(file) {
+      const image = new Image();
+      image.src = URL.createObjectURL(file);
+      await new Promise(resolve => image.onload = resolve);
 
-    document.getElementById('imageUpload').addEventListener('change', function (e) {
-      const reader = new FileReader();
-      reader.onload = function () {
-        document.getElementById('uploadedImage').src = reader.result;
-      };
-      reader.readAsDataURL(e.target.files[0]);
+      const prediction = await model.predict(image);
+      const resultDiv = document.getElementById("predictionResult");
+
+      const sorted = prediction.sort((a, b) => b.probability - a.probability);
+      const top = sorted[0];
+
+      resultDiv.innerHTML = `<h2>🔍 Prediction: ${top.className}</h2>
+                             <p>Confidence: ${(top.probability * 100).toFixed(2)}%</p>`;
+    }
+
+    document.getElementById("imageUpload").addEventListener("change", (event) => {
+      const file = event.target.files[0];
+      if (file && model) {
+        predictImage(file);
+      }
     });
 
-    async function runPrediction() {
-      const imgElement = document.getElementById('uploadedImage');
-      if (!imgElement.src || !imgElement.complete) {
-        document.getElementById('result').innerText = "Please upload an image first.";
-        return;
-      }
-
-      const tensor = tf.browser.fromPixels(imgElement)
-        .resizeNearestNeighbor([224, 224])
-        .toFloat()
-        .div(tf.scalar(255.0))
-        .expandDims();
-
-      const prediction = await model.predict(tensor).data();
-      const maxIndex = prediction.indexOf(Math.max(...prediction));
-      const shape = labels[maxIndex];
-
-      document.getElementById('result').innerText = "Detected Shape: " + shape;
-    }
+    window.onload = loadModel;
   </script>
 </body>
 </html>
