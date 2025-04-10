@@ -1,102 +1,87 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2113.65">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  <meta charset="UTF-8">
+  <title>AI Body Shape Detector</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      text-align: center;
+      background-color: #f9f9f9;
+      padding: 40px;
+    }
+    h1 {
+      color: #333;
+    }
+    input, button {
+      margin: 20px;
+      font-size: 16px;
+      padding: 10px 20px;
+    }
+    img {
+      max-width: 300px;
+      margin-top: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.2);
+    }
+    #result {
+      font-size: 20px;
+      font-weight: bold;
+      color: #2e8b57;
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
-<p class="p1">&lt;!DOCTYPE html&gt;</p>
-<p class="p1">&lt;html lang="en"&gt;</p>
-<p class="p1">&lt;head&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta charset="UTF-8"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;title&gt;AI Body Shape Detector&lt;/title&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"&gt;&lt;/script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;style&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>body {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-family: 'Segoe UI', sans-serif;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>text-align: center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background-color: #f9f9f9;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 40px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>h1 {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: #333;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>input, button {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 16px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 10px 20px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>img {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>max-width: 300px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-top: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 12px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>box-shadow: 0 0 8px rgba(0,0,0,0.2);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>#result {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight: bold;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: #2e8b57;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-top: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/style&gt;</p>
-<p class="p1">&lt;/head&gt;</p>
-<p class="p1">&lt;body&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;h1&gt;AI Body Shape Detector&lt;/h1&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;input type="file" accept="image/*" id="imageUpload"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;br&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;button onclick="runPrediction()"&gt;Detect Body Shape&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;br&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;img id="uploadedImage" alt="Upload an image to detect shape"/&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;p id="result"&gt;&lt;/p&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>let model;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const labels = ["Hourglass", "Pear", "Apple", "Rectangle", "Inverted Triangle"]; // Update this if your model has different labels</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>async function loadModel() {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>model = await tf.loadGraphModel('https://raw.githubusercontent.com/marwajawad/body-shape-detector/main/model/model.json');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>console.log("Model Loaded!");</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>loadModel();</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById('imageUpload').addEventListener('change', function (e) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const reader = new FileReader();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>reader.onload = function () {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById('uploadedImage').src = reader.result;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>};</p>
-<p class="p1"><span class="Apple-converted-space">      </span>reader.readAsDataURL(e.target.files[0]);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>async function runPrediction() {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const imgElement = document.getElementById('uploadedImage');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (!imgElement.src || !imgElement.complete) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById('result').innerText = "Please upload an image first.";</p>
-<p class="p1"><span class="Apple-converted-space">        </span>return;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>const tensor = tf.browser.fromPixels(imgElement)</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.resizeNearestNeighbor([224, 224])</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.toFloat()</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.div(tf.scalar(255.0))</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.expandDims();</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>const prediction = await model.predict(tensor).data();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const maxIndex = prediction.indexOf(Math.max(...prediction));</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const shape = labels[maxIndex];</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('result').innerText = "Detected Shape: " + shape;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/script&gt;</p>
-<p class="p1">&lt;/body&gt;</p>
-<p class="p1">&lt;/html&gt;</p>
+  <h1>AI Body Shape Detector</h1>
+
+  <input type="file" accept="image/*" id="imageUpload">
+  <br>
+  <button onclick="runPrediction()">Detect Body Shape</button>
+  <br>
+  <img id="uploadedImage" alt="Upload an image to detect shape"/>
+  <p id="result"></p>
+
+  <script>
+    let model;
+    const labels = ["Hourglass", "Pear", "Apple", "Rectangle", "Inverted Triangle"]; // Update this if your model has different labels
+
+    async function loadModel() {
+      model = await tf.loadGraphModel('https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO_NAME/main/model/model.json');
+      console.log("Model Loaded!");
+    }
+
+    loadModel();
+
+    document.getElementById('imageUpload').addEventListener('change', function (e) {
+      const reader = new FileReader();
+      reader.onload = function () {
+        document.getElementById('uploadedImage').src = reader.result;
+      };
+      reader.readAsDataURL(e.target.files[0]);
+    });
+
+    async function runPrediction() {
+      const imgElement = document.getElementById('uploadedImage');
+      if (!imgElement.src || !imgElement.complete) {
+        document.getElementById('result').innerText = "Please upload an image first.";
+        return;
+      }
+
+      const tensor = tf.browser.fromPixels(imgElement)
+        .resizeNearestNeighbor([224, 224])
+        .toFloat()
+        .div(tf.scalar(255.0))
+        .expandDims();
+
+      const prediction = await model.predict(tensor).data();
+      const maxIndex = prediction.indexOf(Math.max(...prediction));
+      const shape = labels[maxIndex];
+
+      document.getElementById('result').innerText = "Detected Shape: " + shape;
+    }
+  </script>
 </body>
 </html>
+
