@@ -48,7 +48,7 @@
     const labels = ["Hourglass", "Pear", "Apple", "Rectangle", "Inverted Triangle"]; // Update this if your model has different labels
 
     async function loadModel() {
-      model = await tf.loadGraphModel('https://raw.githubusercontent.com/marwajawad/body-shape-detector/main/model/model.json');
+      model = await tf.loadLayersModel('https://raw.githubusercontent.com/marwajawad/body-shape-detector/main/model/model.json');
       console.log("Model Loaded!");
     }
 
