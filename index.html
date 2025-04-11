@@ -119,7 +119,7 @@
     //  Start
       
        function suggestProductsForShape(shape) {
-  fetch('https://raw.githubusercontent.com/marwajawad/body-shape-detector/main/model/products/products.json') // or your real endpoint
+  fetch('https://raw.githubusercontent.com/marwajawad/body-shape-detector/main/products/products.json') // or your real endpoint
     .then(response => response.json())
     .then(products => {
       const matched = products.filter(p => p.shape.includes(shape));
