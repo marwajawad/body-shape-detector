@@ -44,10 +44,10 @@
   <br>
   <img id="uploadedImage" alt="Upload an image to detect shape"/>
   <p id="result"></p>
+<div id="styleAdviceContainer"></div>
 
   <script type="text/javascript">
   
-    const modelURL = "https://marwajawad.github.io/body-shape-detector/model/model.json";
   let model, webcam, labelContainer, maxPredictions;
 
 
@@ -68,6 +68,16 @@
       reader.readAsDataURL(e.target.files[0]);
     });
 
+    function getStyleSuggestion(shape) {
+      const suggestions = {
+        "Hourglass": "Highlight your waist with fitted tops and high-waisted bottoms. Wrap dresses are your best friend!",
+        "Pear": "Balance your silhouette with structured shoulders, A-line skirts, and boat neck tops.",
+        "Apple": "Go for empire waistlines and V-neck tops to elongate your figure. Avoid tight tops around the midsection.",
+        "Rectangle": "Create curves with ruffled tops, peplum blouses, and belted dresses.",
+        "Inverted Triangle": "Soften the shoulders with wide-leg pants, flared skirts, and scoop necklines.",
+      };
+      return suggestions[shape] || "No specific advice available.";
+    }
     async function runPrediction() {
       const imgElement = document.getElementById('uploadedImage');
       if (!imgElement.src || !imgElement.complete) {
@@ -86,6 +96,8 @@
       const shape = labels[maxIndex];
 
       document.getElementById('result').innerText = "Detected Shape: " + shape;
+      document.getElementById("styleAdviceContainer").innerText = `👗 Style Tip: ${getStyleSuggestion(shape)}`;
+ 
     }
   </script>
 </body>
