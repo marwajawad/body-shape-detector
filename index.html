@@ -64,6 +64,11 @@
   <canvas id="tryOnCanvas" width="400" height="600" style="border: 1px solid #ccc;"></canvas>
 </div>
 
+  <!-- Virtual Try-On Section 2 -->
+
+ <h1>🧥 Virtual Try-On Demo</h1>
+  <input type="file" accept="image/*" id="uploadBtn">
+  <canvas id="outputCanvas"></canvas>
 
   
 
@@ -233,6 +238,52 @@ function handleImageUpload(event) {
     };
     reader.readAsDataURL(file);
   });
+
+          let net;
+
+    async function initBodyPix() {
+      net = await bodyPix.load();
+      console.log("✅ BodyPix model loaded");
+    }
+
+    async function segmentBody(imageElement) {
+      const segmentation = await net.segmentPerson(imageElement);
+      drawClothingOverlay(imageElement, segmentation);
+    }
+
+    function drawClothingOverlay(image, segmentation) {
+      const canvas = document.getElementById('outputCanvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = image.width;
+      canvas.height = image.height;
+
+      ctx.drawImage(image, 0, 0);
+
+      const mask = bodyPix.toMask(segmentation);
+      ctx.putImageData(mask, 0, 0);
+
+      const clothingImg = new Image();
+      clothingImg.src = 'https://i.ibb.co/xhGnKzR/top-demo.png'; // Transparent top PNG
+      clothingImg.onload = () => {
+        const topY = image.height * 0.25;
+        const topX = image.width * 0.3;
+        const width = image.width * 0.4;
+        const height = image.height * 0.4;
+        ctx.drawImage(clothingImg, topX, topY, width, height);
+      };
+    }
+
+    document.getElementById('uploadBtn').addEventListener('change', function(event) {
+      const reader = new FileReader();
+      reader.onload = function () {
+        const img = new Image();
+        img.onload = () => segmentBody(img);
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(event.target.files[0]);
+    });
+
+    initBodyPix();
   //The below bracket should be deleted   
 
     }
