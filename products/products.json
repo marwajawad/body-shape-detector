@@ -1,13 +1,13 @@
 [
     {
         "name": "Pocho Chiffon Set",
-        "image": "https://raw.githubusercontent.com/marwajawad/body-shape-detector/main/products/chiffonponchset.jpeg",
+        "image": "https://raw.githubusercontent.com/marwajawad/body-shape-detector/main/products/chiffonponchset.jpg",
         "shape": ["Hourglass", "Pear", "Apple"],
         "url": "https://www.tajaah.com/versatile-dreamy-chiffon-set"
       },
       {
-      "name": "Wrap Midi Dress",
-      "image": "https://raw.githubusercontent.com/marwajawad/body-shape-detector/main/products/chiffonponchset.jpeg",
+      "name": "Fringe Cape",
+      "image": "https://raw.githubusercontent.com/marwajawad/body-shape-detector/main/products/Fringecape.jpg",
       "shape": ["Hourglass", "Pear"],
       "url": "https://www.tajaah.com/versatile-dreamy-chiffon-set"
     },
