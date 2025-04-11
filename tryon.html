@@ -33,11 +33,13 @@
   <img id="overlayImg" src="toptest.png" style="display:none;" />
 
   <script type="module">
-// //   import { Pose } from 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/vision_bundle.mjs';
  import { TasksVision } from 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/vision_bundle.mjs';
 
-// Then you can use TasksVision.Pose to initialize Pose
-const pose = new TasksVision.Pose();
+    // Create Pose instance
+    const pose = new TasksVision.Pose({
+      locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/${file}`,
+    });
+
     async function init() {
       const video = document.getElementById('video');
       const canvas = document.getElementById('canvas');
