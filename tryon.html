@@ -32,7 +32,17 @@
   <canvas id="canvas" width="640" height="480"></canvas>
   <img id="overlayImg" src="toptest.png" style="display:none;" />
 
+  <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
+
+<a-scene embedded arjs>
+  <a-marker preset="hiro">
+    <a-box position="0 0.5 0" material="color: red;"></a-box>
+  </a-marker>
+  <a-entity camera></a-entity>
+</a-scene>
   <script type="module">
+
+    
     import { Pose } from 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/vision_bundle.mjs';
 
     // Create Pose instance
