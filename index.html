@@ -75,8 +75,7 @@
   
 
   <script type="text/javascript">
-      initBodyPix();
-  
+   
   let model, webcam, labelContainer, maxPredictions;
 
 
@@ -167,7 +166,7 @@
 
 /* Feature 4: virtual try-on */
 
-    /*    let net;
+        let net;
 
 async function initBodyPix() {
   net = await bodyPix.load();
@@ -210,7 +209,7 @@ function handleImageUpload(event) {
   };
   reader.readAsDataURL(event.target.files[0]);
 }
-*/
+
 
         const overlayImageUrl = 'https://raw.githubusercontent.com/marwajawad/body-shape-detector/main/products/toptest.png'; // Transparent dress image
 
@@ -244,8 +243,9 @@ function handleImageUpload(event) {
 
           <!-- Virtual Try-On Section 2 -->
 
-
+/*
           let net;
+      initBodyPix();
 
     async function initBodyPix() {
       net = await bodyPix.load();
@@ -289,7 +289,7 @@ function handleImageUpload(event) {
       reader.readAsDataURL(event.target.files[0]);
     });
 
-  
+  */
   //The below bracket should be deleted   
 
     }
