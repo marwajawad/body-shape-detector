@@ -57,8 +57,15 @@
 </div>
 
 
-  <input type="file" accept="image/*" onchange="handleImageUpload(event)">
-<canvas id="outputCanvas"></canvas>
+<!-- Virtual Try-On Section -->
+<div id="virtualTryOn" style="margin-top: 40px;">
+  <h2>👗 Virtual Try-On</h2>
+  <p>Upload your photo to see how this style looks on you!</p>
+  
+  <input type="file" id="userImageInput" accept="image/*" />
+  <br><br>
+  <canvas id="tryOnCanvas" width="400" height="600" style="border: 1px solid #ccc;"></canvas>
+</div>
 
 
   
@@ -155,7 +162,7 @@
 
 /* Feature 4: virtual try-on */
 
-        let net;
+    /*    let net;
 
 async function initBodyPix() {
   net = await bodyPix.load();
@@ -198,7 +205,39 @@ function handleImageUpload(event) {
   };
   reader.readAsDataURL(event.target.files[0]);
 }
-     //The below bracket should be deleted   
+*/
+
+        const overlayImageUrl = 'https://raw.githubusercontent.com/marwajawad/body-shape-detector/main/products/chiffonponchset.jpeg'; // Transparent dress image
+
+  document.getElementById('userImageInput').addEventListener('change', async function (e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const canvas = document.getElementById('tryOnCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const reader = new FileReader();
+    reader.onload = function (event) {
+      const userImg = new Image();
+      userImg.onload = function () {
+        // Clear previous
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // Draw uploaded photo
+        ctx.drawImage(userImg, 0, 0, canvas.width, canvas.height);
+
+        // Overlay boutique item
+        const overlay = new Image();
+        overlay.src = overlayImageUrl;
+        overlay.onload = function () {
+          ctx.drawImage(overlay, 0, 0, canvas.width, canvas.height); // Adjust position if needed
+        };
+      };
+      userImg.src = event.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+  //The below bracket should be deleted   
+
     }
   </script>
 </body>
