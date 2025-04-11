@@ -6,6 +6,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.20.0/dist/tf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/body-pix@2.0.5"></script>
+  
 
   <style>
     body {
@@ -74,6 +75,7 @@
   
 
   <script type="text/javascript">
+      initBodyPix();
   
   let model, webcam, labelContainer, maxPredictions;
 
@@ -287,7 +289,7 @@ function handleImageUpload(event) {
       reader.readAsDataURL(event.target.files[0]);
     });
 
-    initBodyPix();
+  
   //The below bracket should be deleted   
 
     }
