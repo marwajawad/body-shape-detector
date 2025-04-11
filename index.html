@@ -5,7 +5,10 @@
   <title>AI Body Shape Detector</title>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.20.0/dist/tf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
-
+  
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.20.0"></script>
+   <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/body-pix"></script>
+  
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -43,12 +46,22 @@
   <button onclick="runPrediction()">Detect Body Shape</button>
   <br>
   <img id="uploadedImage" alt="Upload an image to detect shape"/>
+
   <p id="result"></p>
+
+  
 <p id="styleAdviceContainer"></p>
   
   <div id="productSuggestions" style="margin-top: 30px; display: flex; gap: 20px; flex-wrap: wrap;">
   <h3 style="width: 100%;">Recommended for You</h3>
 </div>
+
+
+  <input type="file" accept="image/*" onchange="handleImageUpload(event)">
+<canvas id="outputCanvas"></canvas>
+
+
+  
 
   <script type="text/javascript">
   
@@ -139,6 +152,53 @@
 }
       suggestProductsForShape(shape);
  // End
+
+/* Feature 4: virtual try-on */
+
+        let net;
+
+async function initBodyPix() {
+  net = await bodyPix.load();
+  console.log("BodyPix loaded");
+}
+
+async function segmentBody(imageElement) {
+  const segmentation = await net.segmentPerson(imageElement);
+  drawClothingOverlay(imageElement, segmentation);
+}
+
+function drawClothingOverlay(image, segmentation) {
+  const canvas = document.getElementById('outputCanvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = image.width;
+  canvas.height = image.height;
+
+  // Draw the original image
+  ctx.drawImage(image, 0, 0);
+
+  // Mask background
+  const maskBackground = bodyPix.toMask(segmentation);
+
+  ctx.putImageData(maskBackground, 0, 0);
+
+  // 🧥 Overlay clothing image (aligned based on top body points)
+  const clothingImg = new Image();
+  clothingImg.src = 'clothes/top1.png'; // Transparent PNG
+  clothingImg.onload = () => {
+    ctx.drawImage(clothingImg, 100, 100, 150, 200); // You can adjust these numbers
+  };
+}
+        
+function handleImageUpload(event) {
+  const reader = new FileReader();
+  reader.onload = function () {
+    const img = new Image();
+    img.onload = () => segmentBody(img);
+    img.src = reader.result;
+  };
+  reader.readAsDataURL(event.target.files[0]);
+}
+     //The below bracket should be deleted   
     }
   </script>
 </body>
